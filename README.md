@@ -18,11 +18,7 @@ _______
 git clone (https://github.com/AlinaZbk/mini-blog.git)
 cd mini-blog
 ```
-2. Инициализация Go-модуля
-```bash
-go mod init mini-blog
-```
-3. Запуск сервера
+2. Запуск сервера
 ```bash
 go run main.go
 ```
