@@ -1,182 +1,401 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>Go Mini Blog</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>МИНИ-БЛОГ</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #ece9e6, #ffffff);
+      background: #f4f7f9;
+      color: #333;
       margin: 0;
       padding: 0;
-      color: #333;
     }
 
     header {
-      background: #4a90e2;
+      background: linear-gradient(90deg, #4a90e2, #357ab7);
       color: white;
       text-align: center;
-      padding: 1.5rem;
-      font-size: 1.8rem;
+      padding: 30px 20px;
+      font-size: 36px;
       font-weight: bold;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      letter-spacing: 2px;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
     }
 
     .container {
-      max-width: 900px;
-      margin: 2rem auto;
+      max-width: 700px;
+      margin: 25px auto;
       background: white;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 20px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     h2 {
-      margin-top: 0;
-      color: #2c3e50;
-      font-size: 1.4rem;
-      border-left: 4px solid #4a90e2;
-      padding-left: 0.5rem;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      color: #4a90e2;
+      font-size: 22px;
+      margin-bottom: 15px;
     }
 
     input, textarea {
-      padding: 0.8rem;
-      font-size: 1rem;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 8px;
-      transition: border 0.2s, box-shadow 0.2s;
-    }
-
-    input:focus, textarea:focus {
-      border-color: #4a90e2;
-      box-shadow: 0 0 6px rgba(74, 144, 226, 0.3);
-      outline: none;
+      font-size: 15px;
+      font-family: inherit;
     }
 
     button {
       background: #4a90e2;
       color: white;
+      padding: 10px 16px;
       border: none;
-      padding: 0.9rem;
-      font-size: 1rem;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s, transform 0.1s;
+      margin-top: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: background 0.3s;
     }
 
     button:hover {
-      background: #357ab8;
-    }
-
-    button:active {
-      transform: scale(0.97);
+      background: #357ab7;
     }
 
     .post {
-      background: #fafafa;
-      border-radius: 12px;
-      padding: 1.2rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .post:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
     }
 
     .post h3 {
-      margin: 0 0 0.5rem 0;
+      margin-top: 0;
       color: #2c3e50;
     }
 
-    .post p {
-      margin: 0.5rem 0 1rem 0;
-      line-height: 1.4;
-      color: #555;
+    .actions {
+      margin-top: 12px;
     }
 
-    .post small {
-      color: #888;
-      font-size: 0.9rem;
+    .actions button {
+      margin-right: 10px;
+      font-size: 14px;
     }
 
     .delete-btn {
-      margin-top: 0.8rem;
-      background: #e94e4e;
-      padding: 0.6rem 1rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
+      background: #e74c3c;
     }
 
     .delete-btn:hover {
       background: #c0392b;
     }
+
+    .edit-btn {
+      background: #f39c12;
+    }
+
+    .edit-btn:hover {
+      background: #e67e22;
+    }
+
+    .timestamp {
+      font-size: 13px;
+      color: #666;
+      margin-top: 8px;
+    }
+
+    .empty-posts {
+      text-align: center;
+      padding: 20px;
+      color: #7f8c8d;
+      font-style: italic;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #3498db;
+    }
+
+    .error {
+      color: #e74c3c;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .cancel-btn {
+      background: #95a5a6;
+      margin-left: 10px;
+    }
+
+    .cancel-btn:hover {
+      background: #7f8c8d;
+    }
   </style>
 </head>
 <body>
-  <header>📘 Go Mini Blog</header>
-  <div class="container">
-    <h2>Добавить пост</h2>
-    <form id="postForm">
-      <input type="text" id="title" placeholder="Заголовок" required />
-      <textarea id="content" rows="4" placeholder="Текст поста" required></textarea>
-      <button type="submit">Создать</button>
-    </form>
+  <header>МИНИ-БЛОГ</header>
 
-    <h2>Все посты</h2>
-    <div id="posts"></div>
+  <div class="container">
+    <h2 id="formTitle">Создать пост</h2>
+    <input type="text" id="title" placeholder="Заголовок">
+    <textarea id="content" placeholder="Содержание"></textarea>
+    <button id="submitBtn">Добавить</button>
+    <button id="cancelBtn" class="cancel-btn" style="display: none;">Отмена</button>
+  </div>
+
+  <div class="container">
+    <h2>Список постов</h2>
+    <div id="posts">
+      <div class="loading">Загрузка постов...</div>
+    </div>
   </div>
 
   <script>
-    const form = document.getElementById("postForm");
-    const postsDiv = document.getElementById("posts");
+    const API_BASE_URL = 'http://localhost:8080';
+    
+    // Элементы DOM
+    const titleInput = document.getElementById('title');
+    const contentInput = document.getElementById('content');
+    const submitButton = document.getElementById('submitBtn');
+    const cancelButton = document.getElementById('cancelBtn');
+    const formTitle = document.getElementById('formTitle');
+    const postsContainer = document.getElementById('posts');
 
+    let currentEditId = null;
+
+    // Функция для отображения ошибки
+    function showError(message) {
+      postsContainer.innerHTML = `<div class="error">Ошибка: ${message}</div>`;
+    }
+
+    // Функция для форматирования даты
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleString('ru-RU');
+    }
+
+    // Функция для загрузки постов с сервера
     async function fetchPosts() {
-      const res = await fetch("/posts");
-      const posts = await res.json();
-      postsDiv.innerHTML = "";
-      posts.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "post";
-        div.innerHTML = `
-          <h3>${p.title}</h3>
-          <p>${p.content}</p>
-          <small>Создан: ${new Date(p.created_at).toLocaleString()}</small><br/>
-          <button class="delete-btn" onclick="deletePost(${p.id})">Удалить</button>
+      try {
+        const response = await fetch(`${API_BASE_URL}/posts`);
+        if (!response.ok) {
+          throw new Error('Ошибка загрузки постов');
+        }
+        const posts = await response.json();
+        renderPosts(posts);
+      } catch (error) {
+        showError(error.message);
+        console.error('Ошибка при загрузке постов:', error);
+      }
+    }
+
+    // Функция для отображения постов
+    function renderPosts(posts) {
+      if (!posts || posts.length === 0) {
+        postsContainer.innerHTML = '<div class="empty-posts">Пока нет постов. Создайте первый!</div>';
+        return;
+      }
+      
+      postsContainer.innerHTML = '';
+      
+      posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+        postElement.innerHTML = `
+          <h3>${escapeHtml(post.title)}</h3>
+          <p>${escapeHtml(post.content)}</p>
+          <p class="timestamp">
+            Создан: ${formatDate(post.created_at)}<br>
+            ${post.updated_at ? `Обновлен: ${formatDate(post.updated_at)}` : ''}
+          </p>
+          <div class="actions">
+            <button class="delete-btn" data-id="${post.id}">Удалить</button>
+            <button class="edit-btn" data-id="${post.id}">Редактировать</button>
+          </div>
         `;
-        postsDiv.appendChild(div);
+        postsContainer.appendChild(postElement);
+      });
+      
+      // Добавляем обработчики событий для кнопок удаления и редактирования
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = this.getAttribute('data-id');
+          deletePost(id);
+        });
+      });
+      
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = this.getAttribute('data-id');
+          const postElement = this.closest('.post');
+          const title = postElement.querySelector('h3').textContent;
+          const content = postElement.querySelector('p').textContent;
+          enableEditMode(id, title, content);
+        });
       });
     }
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const title = document.getElementById("title").value;
-      const content = document.getElementById("content").value;
-      await fetch("/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content })
-      });
-      form.reset();
+    // Функция для экранирования HTML
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Функция сброса формы
+    function resetForm() {
+      titleInput.value = '';
+      contentInput.value = '';
+      currentEditId = null;
+      formTitle.textContent = 'Создать пост';
+      submitButton.textContent = 'Добавить';
+      cancelButton.style.display = 'none';
+    }
+
+    // Функция добавления поста
+    async function addPost() {
+      const title = titleInput.value.trim();
+      const content = contentInput.value.trim();
+      
+      if (!title || !content) {
+        alert('Заполните заголовок и содержание!');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/posts`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title, content })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Ошибка при создании поста');
+        }
+        
+        // Сбрасываем форму
+        resetForm();
+        
+        // Обновляем список постов
+        await fetchPosts();
+        
+      } catch (error) {
+        alert(error.message);
+        console.error('Ошибка при создании поста:', error);
+      }
+    }
+
+    // Функция удаления поста
+    async function deletePost(id) {
+      if (!confirm('Вы уверены, что хотите удалить этот пост?')) {
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
+          method: 'DELETE'
+        });
+        
+        if (!response.ok) {
+          throw new Error('Ошибка при удалении поста');
+        }
+        
+        // Обновляем список постов
+        await fetchPosts();
+        
+      } catch (error) {
+        alert(error.message);
+        console.error('Ошибка при удалении поста:', error);
+      }
+    }
+
+    // Функция включения режима редактирования
+    function enableEditMode(id, title, content) {
+      // Заполняем форму данными для редактирования
+      titleInput.value = title;
+      contentInput.value = content;
+      currentEditId = id;
+      
+      // Меняем заголовок и текст кнопок
+      formTitle.textContent = 'Редактировать пост';
+      submitButton.textContent = 'Сохранить изменения';
+      cancelButton.style.display = 'inline-block';
+      
+      // Прокручиваем к форме редактирования
+      document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Функция обновления поста
+    async function updatePost() {
+      const title = titleInput.value.trim();
+      const content = contentInput.value.trim();
+      
+      if (!title || !content) {
+        alert('Заполните заголовок и содержание!');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/posts/${currentEditId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title, content })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Ошибка при обновлении поста');
+        }
+        
+        // Сбрасываем форму
+        resetForm();
+        
+        // Обновляем список постов
+        await fetchPosts();
+        
+      } catch (error) {
+        alert(error.message);
+        console.error('Ошибка при обновлении поста:', error);
+      }
+    }
+
+    // Обработчик отправки формы
+    function handleSubmit() {
+      if (currentEditId) {
+        updatePost();
+      } else {
+        addPost();
+      }
+    }
+
+    // Инициализация при загрузке
+    document.addEventListener('DOMContentLoaded', function() {
+      // Добавляем обработчики для кнопок
+      submitButton.addEventListener('click', handleSubmit);
+      cancelButton.addEventListener('click', resetForm);
+      
+      // Загружаем посты с сервера
       fetchPosts();
     });
-
-    async function deletePost(id) {
-      await fetch(`/posts/${id}`, { method: "DELETE" });
-      fetchPosts();
-    }
-
-    fetchPosts();
   </script>
 </body>
 </html>

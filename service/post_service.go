@@ -17,7 +17,7 @@ func CreatePost(req model.CreatePostRequest) (*model.Post, error) {
 	title := strings.TrimSpace(req.Title)
 	content := strings.TrimSpace(req.Content)
 	if title == "" || len(title) > 200 {
-		return nil, errors.New("title is requires and must be <= 200 chars")
+		return nil, errors.New("title is required and must be <= 200 chars")
 	}
 	if content == "" {
 		return nil, errors.New("content is required")
@@ -56,14 +56,23 @@ func DeletePost(id int64) error {
 	return errors.New("post not found")
 }
 
-func UpdatePost(id int64, req model.UpdatePostRequest) (model.Post, error) {
+func UpdatePost(id int64, req model.UpdatePostRequest) (*model.Post, error) {
+	title := strings.TrimSpace(req.Title)
+	content := strings.TrimSpace(req.Content)
+	if title == "" || len(title) > 200 {
+		return nil, errors.New("title is required and must be <= 200 chars")
+	}
+	if content == "" {
+		return nil, errors.New("content is required")
+	}
+	
 	for i, p := range posts {
 		if p.ID == id {
 			posts[i].Title = req.Title
 			posts[i].Content = req.Content
 			posts[i].UpdatedAt = time.Now()
-			return *posts[i], nil
+			return posts[i], nil
 		}
 	}
-	return model.Post{}, errors.New("post not found")
+	return nil, errors.New("post not found")
 }
