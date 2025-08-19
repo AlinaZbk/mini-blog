@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Go Mini Blog</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #4a90e2;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.5rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    input, textarea {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+    }
+    button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #357ab8;
+    }
+    .post {
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 0;
+    }
+    .post:last-child {
+      border-bottom: none;
+    }
+    .post h3 {
+      margin: 0;
+      color: #222;
+    }
+    .post p {
+      margin: 0.5rem 0;
+      color: #555;
+    }
+    .delete-btn {
+      margin-top: 0.5rem;
+      background: #e94e4e;
+    }
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <header>📘 Go Mini Blog</header>
+  <div class="container">
+    <h2>Добавить пост</h2>
+    <form id="postForm">
+      <input type="text" id="title" placeholder="Заголовок" required />
+      <textarea id="content" rows="4" placeholder="Текст поста" required></textarea>
+      <button type="submit">Создать</button>
+    </form>
+
+    <h2>Все посты</h2>
+    <div id="posts"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("postForm");
+    const postsDiv = document.getElementById("posts");
+
+    async function fetchPosts() {
+      const res = await fetch("/posts");
+      const posts = await res.json();
+      postsDiv.innerHTML = "";
+      posts.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `
+          <h3>${p.title}</h3>
+          <p>${p.content}</p>
+          <small>Создан: ${new Date(p.created_at).toLocaleString()}</small><br/>
+          <button class="delete-btn" onclick="deletePost(${p.id})">Удалить</button>
+        `;
+        postsDiv.appendChild(div);
+      });
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = document.getElementById("title").value;
+      const content = document.getElementById("content").value;
+      await fetch("/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content })
+      });
+      form.reset();
+      fetchPosts();
+    });
+
+    async function deletePost(id) {
+      await fetch(`/posts/${id}`, { method: "DELETE" });
+      fetchPosts();
+    }
+
+    fetchPosts();
+  </script>
+</body>
+</html>
