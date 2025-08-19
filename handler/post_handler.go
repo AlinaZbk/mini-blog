@@ -63,6 +63,21 @@ func PostByIDHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)
+	case http.MethodPut:
+		var req model.UpdatePostRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(model.ErrorResponse{Error: "invalid JSON"})
+			return
+		}
+
+		updatedPost, err := service.UpdatePost(id, req)
+		if err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(model.ErrorResponse{Error: "not found"})
+			return
+		}
+		json.NewEncoder(w).Encode(updatedPost)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}

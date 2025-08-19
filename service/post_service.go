@@ -55,3 +55,15 @@ func DeletePost(id int64) error {
 	}
 	return errors.New("post not found")
 }
+
+func UpdatePost(id int64, req model.UpdatePostRequest) (model.Post, error) {
+	for i, p := range posts {
+		if p.ID == id {
+			posts[i].Title = req.Title
+			posts[i].Content = req.Content
+			posts[i].UpdatedAt = time.Now()
+			return *posts[i], nil
+		}
+	}
+	return model.Post{}, errors.New("post not found")
+}

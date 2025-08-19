@@ -5,75 +5,119 @@
   <title>Go Mini Blog</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ece9e6, #ffffff);
       margin: 0;
       padding: 0;
+      color: #333;
     }
+
     header {
       background: #4a90e2;
       color: white;
       text-align: center;
-      padding: 1rem;
-      font-size: 1.5rem;
+      padding: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 2rem auto;
       background: white;
       padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     }
+
     h2 {
       margin-top: 0;
-      color: #333;
+      color: #2c3e50;
+      font-size: 1.4rem;
+      border-left: 4px solid #4a90e2;
+      padding-left: 0.5rem;
     }
+
     form {
       display: flex;
       flex-direction: column;
       gap: 1rem;
       margin-bottom: 2rem;
     }
+
     input, textarea {
-      padding: 0.5rem;
+      padding: 0.8rem;
       font-size: 1rem;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      width: 100%;
+      border-radius: 8px;
+      transition: border 0.2s, box-shadow 0.2s;
     }
+
+    input:focus, textarea:focus {
+      border-color: #4a90e2;
+      box-shadow: 0 0 6px rgba(74, 144, 226, 0.3);
+      outline: none;
+    }
+
     button {
       background: #4a90e2;
       color: white;
       border: none;
-      padding: 0.7rem;
+      padding: 0.9rem;
       font-size: 1rem;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.1s;
     }
+
     button:hover {
       background: #357ab8;
     }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
     .post {
-      border-bottom: 1px solid #ddd;
-      padding: 1rem 0;
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .post:last-child {
-      border-bottom: none;
+
+    .post:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
+
     .post h3 {
-      margin: 0;
-      color: #222;
+      margin: 0 0 0.5rem 0;
+      color: #2c3e50;
     }
+
     .post p {
-      margin: 0.5rem 0;
+      margin: 0.5rem 0 1rem 0;
+      line-height: 1.4;
       color: #555;
     }
-    .delete-btn {
-      margin-top: 0.5rem;
-      background: #e94e4e;
+
+    .post small {
+      color: #888;
+      font-size: 0.9rem;
     }
+
+    .delete-btn {
+      margin-top: 0.8rem;
+      background: #e94e4e;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
     .delete-btn:hover {
       background: #c0392b;
     }
