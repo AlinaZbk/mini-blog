@@ -17,7 +17,7 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 func PostsHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		json.NewEncoder(w).Encode(service.ListPosts())
+		json.NewEncoder(w).Encode(service.GetListPosts())
 	case http.MethodPost:
 		var req model.CreatePostRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

@@ -35,7 +35,7 @@ func CreatePost(req model.CreatePostRequest) (*model.Post, error) {
 	return p, nil
 }
 
-func ListPosts() []*model.Post { return posts }
+func GetListPosts() []*model.Post { return posts }
 
 func GetPost(id int64) (*model.Post, error) {
 	for _, p := range posts {
@@ -65,7 +65,7 @@ func UpdatePost(id int64, req model.UpdatePostRequest) (*model.Post, error) {
 	if content == "" {
 		return nil, errors.New("content is required")
 	}
-	
+
 	for i, p := range posts {
 		if p.ID == id {
 			posts[i].Title = req.Title
